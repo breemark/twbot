@@ -1,6 +1,10 @@
 import tweepy
+import secrets
 
-
+consumer_key = secrets.consumer_key
+consumer_secret = secrets.consumer_secret
+access_token = secrets.access_token
+access_token_secret = secrets.access_token_secret
 
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
@@ -25,7 +29,6 @@ tweets = api.mentions_timeline(read_last_seen(FILE_NAME), tweet_mode='extended')
 
 for tweet in tweets:
     if '#testing' in tweet.full_text.lower():
-        print('New tweet found')
         print(str(tweet.id) + ' - ' + tweet.full_text)
-
+        api.update_status("@" + tweet.user.screen_name + " Hola, this is a reply", tweet.id)
         store_last_seen(FILE_NAME, tweet.id)
