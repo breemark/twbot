@@ -1,6 +1,9 @@
 import tweepy
 import secrets
 import time
+import dialogues
+import random
+
 
 consumer_key = secrets.consumer_key
 consumer_secret = secrets.consumer_secret
@@ -30,7 +33,7 @@ def reply():
     tweets = api.mentions_timeline(read_last_seen(FILE_NAME), tweet_mode='extended')
     for tweet in reversed(tweets):
         print("Replied to tweet: " + str(tweet.id))
-        api.update_status("Heyy ""@" + tweet.user.screen_name + " That's really cool ;) ", tweet.id)
+        api.update_status("Hola  ""@" + tweet.user.screen_name + dialogues.say_what[random.randint(0, 5)] , tweet.id)
         api.create_favorite(tweet.id)
         api.retweet(tweet.id)
         store_last_seen(FILE_NAME, tweet.id)
