@@ -1,5 +1,6 @@
 import tweepy
 import secrets
+import time
 
 consumer_key = secrets.consumer_key
 consumer_secret = secrets.consumer_secret
@@ -25,10 +26,15 @@ def store_last_seen(FILE_NAME, last_seen_id):
     file_write.close()
     return
 
-tweets = api.mentions_timeline(read_last_seen(FILE_NAME), tweet_mode='extended')
-
-for tweet in tweets:
-    if '#testing' in tweet.full_text.lower():
-        print(str(tweet.id) + ' - ' + tweet.full_text)
-        api.update_status("@" + tweet.user.screen_name + " Hola, this is a reply", tweet.id)
+def reply():
+    tweets = api.mentions_timeline(read_last_seen(FILE_NAME), tweet_mode='extended')
+    for tweet in reversed(tweets):
+        print("Replied to tweet: " + str(tweet.id))
+        api.update_status("Heyy ""@" + tweet.user.screen_name + " That's really cool ;) ", tweet.id)
+        api.create_favorite(tweet.id)
+        api.retweet(tweet.id)
         store_last_seen(FILE_NAME, tweet.id)
+
+while True:
+    reply()
+    time.sleep(15)
